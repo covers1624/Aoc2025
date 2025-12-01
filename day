@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ "$1" = "" ]; then
+  echo "Expected argument."
+  exit 1
+fi
+
+mkdir -p src/main/java/net/covers1624/aoc2025
+cat > src/main/java/net/covers1624/aoc2025/Day"$1".java <<EOF
+package net.covers1624.aoc2025;
+
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+//@Fork (0) // For debugger attachment.
+@Fork (3)
+@Threads (4)
+@State (Scope.Benchmark)
+@BenchmarkMode (Mode.AverageTime)
+@Warmup (iterations = 3, time = 5)
+@Measurement (iterations = 3, time = 5)
+@OutputTimeUnit (TimeUnit.NANOSECONDS)
+public class Day$1 extends Day {
+
+    @Benchmark
+    public void run() {
+
+    }
+}
+EOF
+mkdir -p src/main/resources/day"$1"
+touch src/main/resources/day"$1"/test.txt
+touch src/main/resources/day"$1"/input.txt
