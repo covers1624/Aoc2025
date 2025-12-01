@@ -66,7 +66,7 @@ for (final def fName in file('src/main/java/net/covers1624/aoc2025').list()) {
         mainClass = 'org.openjdk.jmh.Main'
         args '-rff', file("src/main/resources/${f.toLowerCase()}/results.txt")
         args '-rf', 'text'
-        args "net.covers1624.aoc2024.${f}.*"
+        args "net.covers1624.aoc2025.${f}.*"
     }
 }
 
