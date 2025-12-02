@@ -3,6 +3,7 @@ package net.covers1624.aoc2025;
 import net.covers1624.quack.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,10 @@ import java.util.Locale;
 public class Day {
 
     public final Logger LOGGER = LogManager.getLogger(getClassName(getClass()));
+
+    public Blackhole testBlackhole() {
+        return new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
+    }
 
     public String load(String file) {
         return new String(bytes(file), StandardCharsets.UTF_8);
