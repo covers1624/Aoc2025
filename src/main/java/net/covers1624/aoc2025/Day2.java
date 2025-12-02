@@ -99,10 +99,8 @@ public class Day2 extends Day {
         int len = num.length();
         int half = (int) Math.floor(len / 2F);
 
-        for (int j = 0; j <= half; j++) {
-            // String must be a multiple of the pattern.
-            float occur = len / (float) j;
-            if (occur != (int) occur) continue;
+        for (int j = 1; j <= half; j++) {
+            if ((len % j) != 0) continue;
 
             if (isPattern(num, num, 0, j)) {
                 return false;
@@ -112,9 +110,6 @@ public class Day2 extends Day {
     }
 
     private boolean isPattern(String str, String pattern, int pStart, int pLen) {
-        if (pattern.isEmpty()) return false;
-        if (!str.startsWith(pattern)) throw new IllegalArgumentException("jkghaslr");
-
         int len = str.length();
         for (int i = pLen; i < len; i += pLen) {
             if (!str.regionMatches(i, pattern, pStart, pLen)) {
