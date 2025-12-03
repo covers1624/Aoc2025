@@ -5,6 +5,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.LongPredicate;
+import java.util.stream.IntStream;
 
 //@Fork (0) // For debugger attachment.
 @Fork (3)
@@ -16,14 +17,20 @@ import java.util.function.LongPredicate;
 @OutputTimeUnit (TimeUnit.NANOSECONDS)
 public class Day2 extends Day {
 
+    private static final long[] POW_10 = IntStream.range(0, 16)
+            .mapToLong(e -> Math.unsignedPowExact(10L, e))
+            .toArray();
+
     public final String testInput = load("test.txt").trim();
     public final String input = load("input.txt").trim();
 
     void main() {
         p1Test(testBlackhole());
         p1(testBlackhole());
+        p1Math(testBlackhole());
         p2Test(testBlackhole());
         p2(testBlackhole());
+        p2Math(testBlackhole());
     }
 
     //    @Benchmark
@@ -40,6 +47,13 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @Benchmark
+    public void p1Math(Blackhole bh) {
+        var result = solve(input, this::checkP1Math);
+        assertResult(result, 22062284697L);
+        bh.consume(result);
+    }
+
     //    @Benchmark
     public void p2Test(Blackhole bh) {
         var result = solve(testInput, this::checkP2);
@@ -50,6 +64,13 @@ public class Day2 extends Day {
     @Benchmark
     public void p2(Blackhole bh) {
         var result = solve(input, this::checkP2);
+        assertResult(result, 46666175279L);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void p2Math(Blackhole bh) {
+        var result = solve(input, this::checkP2Math);
         assertResult(result, 46666175279L);
         bh.consume(result);
     }
@@ -78,6 +99,17 @@ public class Day2 extends Day {
         return !num.regionMatches(0, num, halfLen, halfLen);
     }
 
+    private boolean checkP1Math(long i) {
+        int d = countDigits(i);
+        // Odd values can never have invalid dupes here.
+        if ((d & 1) == 1) return true;
+
+        long p = pow10(d / 2);
+        long high = i / p;
+        long low = i % p;
+        return high != low;
+    }
+
     private boolean checkP2(long i) {
         if (!checkP1(i)) return false;
 
@@ -103,5 +135,43 @@ public class Day2 extends Day {
             }
         }
         return true;
+    }
+
+    private boolean checkP2Math(long i) {
+        int d = countDigits(i);
+
+        for (int k = 1; k <= d / 2; k++) {
+            // total len must be multiple of block len
+            if (d % k != 0) continue;
+
+            // pull the block we want to test
+            long block = i / pow10(d - k);
+
+            int r = d / k; // num repeats
+            long pow10d = pow10(k);
+
+            long rep = 0; // append r repeats of the pattern.
+            for (int j = 0; j < r; j++) {
+                rep = rep * pow10d + block;
+            }
+            // are same? we found repeat
+            if (rep == i) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int countDigits(long l) {
+        int n = 0;
+        while (l > 0) {
+            l /= 10;
+            n++;
+        }
+        return n;
+    }
+
+    private static long pow10(int n) {
+        return POW_10[n];
     }
 }
