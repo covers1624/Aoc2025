@@ -4,6 +4,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.LongPredicate;
 
 //@Fork (0) // For debugger attachment.
 @Fork (3)
@@ -25,42 +26,42 @@ public class Day2 extends Day {
         p2(testBlackhole());
     }
 
-//    @Benchmark
+    //    @Benchmark
     public void p1Test(Blackhole bh) {
-        var result = solveP1(testInput);
+        var result = solve(testInput, this::checkP1);
         assertResult(result, 1227775554L);
         bh.consume(result);
     }
 
     @Benchmark
     public void p1(Blackhole bh) {
-        var result = solveP1(input);
+        var result = solve(input, this::checkP1);
         assertResult(result, 22062284697L);
         bh.consume(result);
     }
 
-//    @Benchmark
+    //    @Benchmark
     public void p2Test(Blackhole bh) {
-        var result = solveP2(testInput);
+        var result = solve(testInput, this::checkP2);
         assertResult(result, 4174379265L);
         bh.consume(result);
     }
 
     @Benchmark
     public void p2(Blackhole bh) {
-        var result = solveP2(input);
+        var result = solve(input, this::checkP2);
         assertResult(result, 46666175279L);
         bh.consume(result);
     }
 
-    public long solveP1(String input) {
+    public long solve(String input, LongPredicate pred) {
         long sum = 0;
         for (var range : input.split(",")) {
             int sep = range.indexOf("-");
             long start = Long.parseLong(range, 0, sep, 10);
             long end = Long.parseLong(range, sep + 1, range.length(), 10);
             for (long i = start; i <= end; i++) {
-                if (!checkP1(i)) {
+                if (!pred.test(i)) {
                     sum += i;
                 }
             }
@@ -75,21 +76,6 @@ public class Day2 extends Day {
         if (halfLenF != (float) halfLen) return true; // Must be even split.
 
         return !num.regionMatches(0, num, halfLen, halfLen);
-    }
-
-    public long solveP2(String input) {
-        long sum = 0;
-        for (var range : input.split(",")) {
-            int sep = range.indexOf("-");
-            long start = Long.parseLong(range, 0, sep, 10);
-            long end = Long.parseLong(range, sep + 1, range.length(), 10);
-            for (long i = start; i <= end; i++) {
-                if (!checkP2(i)) {
-                    sum += i;
-                }
-            }
-        }
-        return sum;
     }
 
     private boolean checkP2(long i) {
