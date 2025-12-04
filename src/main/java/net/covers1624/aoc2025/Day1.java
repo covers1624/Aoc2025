@@ -6,7 +6,6 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 //@Fork (0) // For debugger attachment.
 @Fork (3)
@@ -30,6 +29,7 @@ public class Day1 extends Day {
             .map(e -> new Rotation(e.startsWith("R"), Integer.parseInt(e.substring(1))))
             .toList();
 
+    @DayEntry
 //    @Benchmark
     public void p1Test(Blackhole bh) {
         int result = solveP1(testInput, 50);
@@ -37,6 +37,7 @@ public class Day1 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p1(Blackhole bh) {
         int result = solveP1(input, 50);
@@ -44,6 +45,7 @@ public class Day1 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
 //    @Benchmark
     public void p2Test(Blackhole bh) {
         int result = solveP2(testInput, 50);
@@ -51,6 +53,7 @@ public class Day1 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p2(Blackhole bh) {
         int result = solveP2(input, 50);

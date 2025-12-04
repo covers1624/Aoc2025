@@ -27,13 +27,7 @@ public class Day3 extends Day {
             .filterNot(String::isEmpty)
             .toList();
 
-    void main() {
-        p1Test(testBlackhole());
-        p1(testBlackhole());
-        p2Test(testBlackhole());
-        p2(testBlackhole());
-    }
-
+    @DayEntry
 //    @Benchmark
     public void p1Test(Blackhole bh) {
         var result = solve(testInput, 2);
@@ -41,6 +35,7 @@ public class Day3 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p1(Blackhole bh) {
         var result = solve(input, 2);
@@ -48,6 +43,7 @@ public class Day3 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
 //    @Benchmark
     public void p2Test(Blackhole bh) {
         var result = solve(testInput, 12);
@@ -55,6 +51,7 @@ public class Day3 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p2(Blackhole bh) {
         var result = solve(input, 12);

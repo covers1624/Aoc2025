@@ -24,15 +24,7 @@ public class Day2 extends Day {
     public final String testInput = load("test.txt").trim();
     public final String input = load("input.txt").trim();
 
-    void main() {
-        p1Test(testBlackhole());
-        p1(testBlackhole());
-        p1Math(testBlackhole());
-        p2Test(testBlackhole());
-        p2(testBlackhole());
-        p2Math(testBlackhole());
-    }
-
+    @DayEntry
     //    @Benchmark
     public void p1Test(Blackhole bh) {
         var result = solve(testInput, this::checkP1);
@@ -40,6 +32,7 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p1(Blackhole bh) {
         var result = solve(input, this::checkP1);
@@ -47,6 +40,7 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p1Math(Blackhole bh) {
         var result = solve(input, this::checkP1Math);
@@ -54,6 +48,7 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     //    @Benchmark
     public void p2Test(Blackhole bh) {
         var result = solve(testInput, this::checkP2);
@@ -61,6 +56,7 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p2(Blackhole bh) {
         var result = solve(input, this::checkP2);
@@ -68,6 +64,7 @@ public class Day2 extends Day {
         bh.consume(result);
     }
 
+    @DayEntry
     @Benchmark
     public void p2Math(Blackhole bh) {
         var result = solve(input, this::checkP2Math);
