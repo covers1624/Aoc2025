@@ -1,0 +1,3 @@
+Benchmark  Mode  Cnt        Score       Error  Units
+Day4.p1    avgt    9   169295.214 ±  3385.458  ns/op
+Day4.p2    avgt    9  2132690.172 ± 21518.043  ns/op
