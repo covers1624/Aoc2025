@@ -21,12 +21,12 @@ public class Day5 extends Day {
 
     public final List<String> testInput = FastStream.of(loadLines("test.txt"))
             .map(String::trim)
-            .filterNot(String::isEmpty)
+//            .filterNot(String::isEmpty)
             .toList();
 
     public final List<String> input = FastStream.of(loadLines("input.txt"))
             .map(String::trim)
-            .filterNot(String::isEmpty)
+//            .filterNot(String::isEmpty)
             .toList();
 
     @DayEntry
@@ -63,15 +63,21 @@ public class Day5 extends Day {
 
     private int solveP1(List<String> lines) {
         int fresh = 0;
-        List<Range> ranges = new ArrayList<>();
+        boolean parsedRanges = false;
+        var rSet = new RangeSet();
         for (String line : lines) {
-            int dash = line.indexOf('-');
-            if (dash != -1) {
-                ranges.add(new Range(Long.parseLong(line, 0, dash, 10), Long.parseLong(line, dash + 1, line.length(), 10)));
+            if (!parsedRanges) {
+                int dash = line.indexOf('-');
+                if (dash != -1) {
+                    rSet.addRange(Long.parseLong(line, 0, dash, 10), Long.parseLong(line, dash + 1, line.length(), 10));
+                } else {
+                    rSet.compact();
+                    parsedRanges = true;
+                }
                 continue;
             }
 
-            for (Range range : ranges) {
+            for (Range range : rSet.ranges) {
                 if (range.isInside(Long.parseLong(line))) {
                     fresh++;
                     break;
@@ -82,46 +88,69 @@ public class Day5 extends Day {
     }
 
     private long solveP2(List<String> lines) {
-        List<Range> ranges = new ArrayList<>();
+        var rSet = new RangeSet();
         for (String line : lines) {
             int dash = line.indexOf('-');
             if (dash != -1) {
-                ranges.add(new Range(Long.parseLong(line, 0, dash, 10), Long.parseLong(line, dash + 1, line.length(), 10)));
+                rSet.addRange(Long.parseLong(line, 0, dash, 10), Long.parseLong(line, dash + 1, line.length(), 10));
                 continue;
             }
             break;
         }
 
-        ranges.sort(Comparator.<Range>comparingLong(e -> e.start).thenComparingLong(e -> e.end));
-        mergeRanges(ranges);
+        rSet.compact();
 
         long total = 0;
-        for (Range range : ranges) {
+        for (Range range : rSet.ranges) {
             total += (range.end - range.start) + 1;
         }
 
         return total;
     }
 
-    private void mergeRanges(List<Range> ranges) {
-        assert ranges.size() > 1;
+    private record RangeSet(List<Range> ranges) {
 
-        for (int i = 0; i < ranges.size() - 1; i++) {
-            Range curr = ranges.get(i);
-            Range next = ranges.get(i + 1);
+        public RangeSet() {
+            this(new ArrayList<>());
+        }
 
-            if (curr.isInside(next.start)) {
-                ranges.set(i, new Range(curr.start, Math.max(curr.end, next.end)));
-                ranges.remove(i + 1);
-                i--;
+        public void addRange(long start, long end) {
+            var range = new Range(start, end);
+
+            int i = 0;
+//            while (i < ranges.size() && range.compareTo(ranges.get(i)) > 0) {
+//                i++;
+//            }
+            ranges.add(i, range);
+        }
+
+        public void compact() {
+            ranges.sort(Comparator.naturalOrder());
+            for (int i = 0; i < ranges.size() - 1; i++) {
+                Range curr = ranges.get(i);
+                Range next = ranges.get(i + 1);
+
+                if (curr.isInside(next.start)) {
+                    ranges.set(i, new Range(curr.start, Math.max(curr.end, next.end)));
+                    ranges.remove(i + 1);
+                    i--;
+                }
             }
         }
     }
 
-    private record Range(long start, long end) {
+    private record Range(long start, long end) implements Comparable<Range> {
 
         public boolean isInside(long value) {
             return value >= start && value <= end;
+        }
+
+        @Override
+        public int compareTo(Range r) {
+            int a = Long.compare(start, r.start);
+            if (a != 0) return a;
+
+            return Long.compare(end, r.end);
         }
     }
 }
