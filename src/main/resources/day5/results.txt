@@ -1,0 +1,3 @@
+Benchmark  Mode  Cnt        Score      Error  Units
+Day5.p1    avgt    9  1621258.352 ± 8894.261  ns/op
+Day5.p2    avgt    9    13860.313 ±  224.377  ns/op
